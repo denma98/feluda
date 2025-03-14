@@ -22,7 +22,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and push amd64
-        uses: docker/build-push-action@2cdde995de11925a030ce8070c3d77a52ffcf1c0 # v5.3.0
+        uses: docker/build-push-action@471d1dc4e07e5cdedd4c2171150001c434f0b7a4 # v6.15.0
         with:
           context: "{{defaultContext}}:src/"
           file: worker/hash/Dockerfile.hash_worker
@@ -34,7 +34,7 @@ jobs:
           tags: tattletech/feluda-operator-hash:worker-amd64-latest
 
       - name: Build and push arm64
-        uses: docker/build-push-action@2cdde995de11925a030ce8070c3d77a52ffcf1c0 # v5.3.0
+        uses: docker/build-push-action@471d1dc4e07e5cdedd4c2171150001c434f0b7a4 # v6.15.0
         with:
           context: "{{defaultContext}}:src/"
           file: worker/hash/Dockerfile.hash_worker_graviton
