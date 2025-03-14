@@ -12,17 +12,26 @@ updates:
     schedule:
       interval: "weekly"
 
-  # DISABLE version updates for Python in /src
-  # - package-ecosystem: "pip"
-  #   directory: "/src"
-  #   schedule:
-  #     interval: "weekly"
+  # Explicitly disable pip updates for /src
+  - package-ecosystem: "pip"
+    directory: "/src"
+    schedule:
+      interval: "weekly"
+    # This prevents Dependabot from creating PRs
+    open-pull-requests-limit: 0
 
-  # Enable version updates for uv (pyproject.toml in /)
+  # Enable version updates for uv (pyproject.toml)
   - package-ecosystem: "uv"
     directory: "/"
     schedule:
       interval: "weekly"
+    # Adding some settings to increase visibility
+    open-pull-requests-limit: 20
+    pull-request-branch-name:
+      separator: "-"
+    commit-message:
+      prefix: "build"
+      include: "scope"
 
   # Enable version updates for GitHub Actions workflows
   - package-ecosystem: "github-actions"
