@@ -7,13 +7,7 @@ updates:
       interval: "weekly"
 
   # Enable version updates for Dockerfiles inside /src
-  - package-ecosystem: "docker
-    directory: "/src"
-    schedule:
-      interval: "weekly"
-
-  # Enable version updates for Python (requirements.txt in /src)
-  - package-ecosystem: "pip"
+  - package-ecosystem: "docker"
     directory: "/src"
     schedule:
       interval: "weekly"
@@ -23,6 +17,8 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    ignore:
+      - directory: "src/**"
 
   # Enable version updates for GitHub Actions workflows
   - package-ecosystem: "github-actions"
