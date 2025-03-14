@@ -19,5 +19,5 @@ psycopg2-binary==2.9.9
 boto3==1.37.13
 pydub==0.25.1
 # not direct requirments, but added because of pip-audit report
-certifi==2024.7.4
+certifi==2025.1.31
 urllib3==2.2.2
