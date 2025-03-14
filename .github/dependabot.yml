@@ -7,7 +7,7 @@ updates:
       interval: "weekly"
 
   # Enable version updates for Dockerfiles inside /src
-  - package-ecosystem: "docker"
+  - package-ecosystem: "docker
     directory: "/src"
     schedule:
       interval: "weekly"
