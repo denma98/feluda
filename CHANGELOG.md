@@ -1,3 +1,12 @@
+# Release feluda-0.10.0
+
+## Features
+* feat: add test change to feluda (fbe3790)
+
+## Contributors
+Denma
+
+
 # CHANGELOG
 
 
