@@ -118,13 +118,14 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "GitHub Actions [Bot]"
 
-          # Get the previous feluda tag
-          PREV_TAG=$(git describe --tags --abbrev=0 HEAD^)
-          echo "Prev feluda tag: $PREV_TAG"
-          echo "New feluda tag: ${{ steps.push-changes.outputs.new_tag }}"
+          # Use the PR's commit range instead of tags
+          BASE_COMMIT="${{ steps.commit-range.outputs.base_commit }}"
+          LATEST_COMMIT="${{ steps.commit-range.outputs.latest_commit }}"
+          echo "Base commit: $BASE_COMMIT"
+          echo "Latest commit: $LATEST_COMMIT"
 
-          # Get commits affecting only the feluda/ directory
-          FELUDA_COMMITS=$(git log "${PREV_TAG}..HEAD" --pretty=format:"* %s (%h)" --no-merges -- feluda/)
+          # Get commits affecting only the feluda/ directory from this PR
+          FELUDA_COMMITS=$(git log "${BASE_COMMIT}..${LATEST_COMMIT}" --pretty=format:"* %s (%h)" --no-merges -- feluda/)
           echo "Feluda commits: $FELUDA_COMMITS"
 
           # Skip if no commits affecting feluda/
@@ -134,7 +135,7 @@ jobs:
           fi
 
           # Create release notes file with header
-          echo "# Release ${{ steps.push-changes.outputs.new_tag }}" > release_notes.md
+          echo "# Release" > release_notes.md
           echo "" >> release_notes.md
 
           # Function to add section if commits exist
@@ -169,7 +170,7 @@ jobs:
           fi
 
           # Add contributors section
-          contributors=$(git log "${PREV_TAG}..HEAD" --pretty=format:"%an" --no-merges -- feluda/ | sort -u)
+          contributors=$(git log "${BASE_COMMIT}..${LATEST_COMMIT}" --pretty=format:"%an" --no-merges -- feluda/ | sort -u)
           if [ ! -z "$contributors" ]; then
             echo "## Contributors" >> release_notes.md
             echo "$contributors" | sed 's/^/* /' >> release_notes.md
@@ -188,5 +189,5 @@ jobs:
 
           # Commit and push the updated CHANGELOG
           git add CHANGELOG.md
-          git commit -m "docs: update CHANGELOG.md for changes in feluda"
-          git push
+          git commit -m "docs: update CHANGELOG.md for changes in feluda" || true
+          git push || true
