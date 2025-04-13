@@ -31,6 +31,28 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pip-audit uv
+
+      - name: Convert pyproject.toml to requirements.txt and Run pip-audit
+        run: |
+          # Find all pyproject.toml files
+          find . -name pyproject.toml -type f | while read -r toml_file; do
+            echo "Processing $toml_file"
+            dir=$(dirname "$toml_file")
+            
+            # Convert pyproject.toml to requirements.txt using uv
+            cd "$dir"
+            uv pip compile pyproject.toml -o requirements.txt
+            
+            # Run pip-audit on the requirements file
+            echo "Running pip-audit for $dir"
+            pip-audit -r requirements.txt || exit 1
+            cd -
+          done
+
       - name: Lint with Ruff
         uses: chartboost/ruff-action@e18ae971ccee1b2d7bbef113930f00c670b78da4 # v1.0.0
         with:
@@ -42,6 +64,16 @@ jobs:
           pip install tomlkit
           python -m scripts.validate_toml_files
 
+      - name: Run Deptry Check
+        run: |
+          pip install deptry
+          find . -name pyproject.toml -type f | while read -r toml_file; do
+            dir=$(dirname "$toml_file")
+            echo "Running deptry check for $dir"
+            cd "$dir"
+            deptry . || exit 1
+            cd -
+          done
 
       # - name: Run Trivy vulnerability scanner in repo mode
       #   uses: aquasecurity/trivy-action@fd25fed6972e341ff0007ddb61f77e88103953c2 # v0.21.0
